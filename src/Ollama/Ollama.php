@@ -22,7 +22,7 @@ class Ollama
      * @param string|null $model  Modèle à utiliser (sinon on prend celui passé au constructeur)
      * @param string      ...$tools Liste des noms de classes (tools) que l’on souhaite utiliser
      */
-    public function createChat(?string $model = null, string ...$tools) : OllamaChat
+    public function createChat(?string $model = null, \Ai\FunctionCallingInterface ...$tools) : OllamaChat
     {
         return new OllamaChat($this, $model ?? $this->model, ...$tools);
     }
