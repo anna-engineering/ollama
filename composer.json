@@ -1,0 +1,19 @@
+{
+  "name": "anna-engineering/ollama",
+  "autoload": {
+    "psr-4": {
+      "Ollama\\": ["src/Ollama"]
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "": ["tests/"]
+    }
+  },
+  "require": {
+  },
+  "require-dev": {
+    "phpunit/phpunit": "*",
+    "brianium/paratest": "*"
+  }
+}
