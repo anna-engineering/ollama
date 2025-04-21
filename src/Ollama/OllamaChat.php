@@ -65,9 +65,9 @@ class OllamaChat implements \JsonSerializable
         $data = fetch_json($this->ollama->base_url . '/api/chat', method: 'POST', data: $json);
 
         $tool_calls = [];
-        foreach ($data->tool_calls ?? [] as $tool_call)
+        foreach ($data->message->tool_calls ?? [] as $tool_call)
         {
-            $tool_calls[] = new \Ai\FunctionCall($tool_call->function->name, $tool_call->function->arguments);
+            $tool_calls[] = new \Ai\FunctionCall($tool_call->function->name, (array) $tool_call->function->arguments);
         }
 
         $this->messages[] = new OllamaMessage($data->message->role, $data->message->content, ...$tool_calls);
