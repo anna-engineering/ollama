@@ -11,9 +11,12 @@
     }
   },
   "require": {
+    "anna-engineering/ai": "*",
+    "anna-engineering/http": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "*",
     "brianium/paratest": "*"
-  }
+  },
+  "minimum-stability": "dev"
 }
