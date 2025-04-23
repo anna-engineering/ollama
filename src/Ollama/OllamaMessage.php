@@ -9,27 +9,33 @@ class OllamaMessage implements \JsonSerializable
     /**
      * @var \Ai\FunctionCall[]
      */
-    protected(set) array $function_calls = [];
+    protected(set) array $tool_calls = [];
+
+    protected(set) array $extra = [];
 
     public function __construct(
         protected(set) string $role = 'user',
         protected(set) string $content = '',
-        FunctionCall ...$function_calls,
+        FunctionCall ...$tool_calls,
     )
     {
-        $this->function_calls = $function_calls;
+        $this->tool_calls = $tool_calls;
+    }
+
+    public function setExtra(string $name, mixed $value) : static
+    {
+        $this->extra[$name] = $value;
+
+        return $this;
     }
 
     public function jsonSerialize() : mixed
     {
-        $data = [
+        return [
             'role'    => $this->role,
             'content' => $this->content,
+            ...$this->extra,
+            ...(count($this->tool_calls) ? ['tool_calls' => $this->tool_calls] : []),
         ];
-        if (count($this->function_calls) > 0)
-        {
-            $data['function_calls'] = $this->function_calls;
-        }
-        return $data;
     }
 }
