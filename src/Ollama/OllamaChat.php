@@ -35,6 +35,22 @@ class OllamaChat implements \JsonSerializable
         }
     }
 
+    public function addTools(FunctionCallingInterface ...$tools)
+    {
+        foreach ($tools as $tool)
+        {
+            $this->tools[$tool->getName()] = $tool;
+        }
+    }
+
+    public function removeTools(FunctionCallingInterface ...$tools)
+    {
+        foreach ($tools as $tool)
+        {
+            unset($this->tools[$tool->getName()]);
+        }
+    }
+
     public function message(string $content, string $role = 'user') : OllamaMessage
     {
         return $this->messages[] = new OllamaMessage($role, $content);
