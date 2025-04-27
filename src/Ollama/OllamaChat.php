@@ -183,7 +183,7 @@ class OllamaChat implements \JsonSerializable
             'tools'    => array_values($this->tools),
             ...(empty($this->format) ? [] : ['format' => $this->format]),
             ...(empty($this->options) ? [] : ['options' => $this->options]),
-            ...(empty($this->stream) ? [] : ['stream' => $this->stream]),
+            ...['stream' => $this->stream],
             ...(empty($this->keep_alive) ? [] : ['keep_alive' => $this->keep_alive]),
         ];
     }
