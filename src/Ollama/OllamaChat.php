@@ -21,6 +21,11 @@ class OllamaChat implements \JsonSerializable
      */
     protected(set) array $tools = [];
 
+    public string $format = '';
+    public array $options = [];
+    public bool $stream = false;
+    public string $keep_alive = '';
+
     public function __construct(
         protected Ollama $ollama,
         string|null $model = null,
@@ -76,17 +81,14 @@ class OllamaChat implements \JsonSerializable
         return $this->message($content, 'user');
     }
 
-    public function getContext(bool $stream = false)
+    public function getContext()
     {
-        $context = $this->jsonSerialize();
-        $context['stream'] = $stream;
-
-        return $context;
+        return $this->jsonSerialize();
     }
 
     public function prompt() : OllamaMessage
     {
-        $data = fetch_json($this->ollama->base_url . '/api/chat', method: 'POST', data: $this->getContext(false));
+        $data = fetch_json($this->ollama->base_url . '/api/chat', method: 'POST', data: $this->getContext());
 
         $tool_calls = [];
         foreach ($data->message->tool_calls ?? [] as $tool_call)
@@ -179,11 +181,23 @@ class OllamaChat implements \JsonSerializable
             'model'    => $this->model,
             'messages' => $this->messages,
             'tools'    => array_values($this->tools),
+            ...(empty($this->format) ? [] : ['format' => $this->format]),
+            ...(empty($this->options) ? [] : ['options' => $this->options]),
+            ...(empty($this->stream) ? [] : ['stream' => $this->stream]),
+            ...(empty($this->keep_alive) ? [] : ['keep_alive' => $this->keep_alive]),
         ];
     }
 
     public function debug()
     {
-        echo json_encode($this->getContext(false), JSON_PRETTY_PRINT) . PHP_EOL;
+        echo json_encode($this->getContext(), JSON_PRETTY_PRINT) . PHP_EOL;
+    }
+
+
+    public function setOption(string $name, string $value) : static
+    {
+        $this->options[$name] = $value;
+
+        return $this;
     }
 }
