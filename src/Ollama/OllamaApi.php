@@ -33,6 +33,31 @@ class OllamaApi
     }
 
     /**
+     * Generate Embeddings
+     *
+     * Generate embeddings from a model
+     *
+     * @param string $input text or list of text to generate embeddings for
+     * @param bool $truncate truncates the end of each input to fit within context length. Returns error if false and context length is exceeded. Defaults to true
+     * @param array $options additional model parameters listed in the documentation for the Modelfile such as temperature
+     * @param string $keep_alive controls how long the model will stay loaded into memory following the request (default: 5m)
+     * @param string|null $model name of model to generate embeddings from
+     * @return PromiseProxyInterface
+     */
+    public function embed(string $input, bool $truncate = true, array $options = [], string $keep_alive = '5m', ?string $model = null) : PromiseProxyInterface
+    {
+        $payload = [
+            'model'  => $model ?? $this->ollama->model,
+            'input' => $input,
+            'truncate' => $truncate,
+            'options' => $options,
+            'keep_alive' => $keep_alive,
+        ];
+
+        return fetch_json($this->ollama->base_url . '/api/embed', method: 'POST', data: $payload);
+    }
+
+    /**
      * GET /version
      *
      * @return PromiseProxyInterface|VersionResource
