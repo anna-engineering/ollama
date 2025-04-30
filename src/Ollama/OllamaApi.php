@@ -50,7 +50,7 @@ class OllamaApi
             'model'  => $model ?? $this->ollama->model,
             'input' => $input,
             'truncate' => $truncate,
-            'options' => $options,
+            ...(count($options) ? ['options' => $options] : []),
             'keep_alive' => $keep_alive,
         ];
 
